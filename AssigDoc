@@ -1,0 +1,66 @@
+import pandas as pd
+import numpy as np
+
+# Load the data
+df = pd.read_csv('Admission_Predict.csv')
+
+# Extract the data
+X = df.values
+
+# Extract the number of rows and columns
+N, M = X.shape
+
+# Calculate the covariance matrix
+cov = np.zeros((M, M))
+
+for i in range(M):
+
+    # Mean of column "i"
+    mean_i = np.sum(X[:, i]) / N
+
+    for j in range(M):
+
+        # Mean of column "j"
+        mean_j = np.sum(X[:, j]) / N
+
+        # Covariance between column "i" and column "j"
+        cov[i, j] = np.sum((X[:, i] - mean_i) * (X[:, j] - mean_j)) / (N - 1)
+
+# Compare with numpy covariance matrix
+np_cov = np.cov(df.values, rowvar=False)
+np_cov_diff = np.sum(np.abs(cov - np_cov))
+print('Difference from numpy cov. mat.: {:.12f}'.format(np_cov_diff))
+# Difference from numpy cov. mat.: 0.000000000000
+
+
+
+values, vectors = eig(V)
+print(vectors)
+print(values)
+# project data
+P = vectors.T.dot(C.T)
+print(P.T)
+
+
+
+
+/////////////////////////////////
+    def __kernel_matrix(self):
+        """
+        Compute kernel matrix
+        Output:
+        
+        K: nxn matrix
+        """
+        K = []
+        r, c = self.X.shape
+        for fil in range(c):
+            k_aux = []
+            for col in range(c):
+                k_aux.append(self.kernel(self.X[:, fil], self.X[:, col]))
+            K.append(k_aux)
+        K = np.array(K)
+        # Centering K
+        ones = np.ones(K.shape)/c
+        K = K - ones@K - K@ones + ones@K@ones
+        return K
